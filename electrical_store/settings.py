@@ -1,13 +1,22 @@
 from pathlib import Path
+import os
+import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-SECRET_KEY = "django-insecure-change-this-later"
+SECRET_KEY = os.environ.get(
+    "SECRET_KEY",
+    "django-insecure-change-this-later"
+)
 
-DEBUG = True
+DEBUG = os.environ.get("DEBUG", "False").lower() == "true"
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    host.strip()
+    for host in os.environ.get("ALLOWED_HOSTS", "").split(",")
+    if host.strip()
+]
 
 
 INSTALLED_APPS = [
@@ -57,12 +66,23 @@ TEMPLATES = [
 WSGI_APPLICATION = "electrical_store.wsgi.application"
 
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+DATABASE_URL = os.environ.get("DATABASE_URL")
+
+if DATABASE_URL:
+    DATABASES = {
+        "default": dj_database_url.parse(
+            DATABASE_URL,
+            conn_max_age=600,
+            conn_health_checks=True,
+        )
     }
-}
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
+    }
 
 
 AUTH_PASSWORD_VALIDATORS = [
