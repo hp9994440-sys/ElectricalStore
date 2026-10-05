@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.contrib.admin import AdminSite
 
 from .models import (
     Category,
@@ -9,9 +10,32 @@ from .models import (
 )
 
 
-@admin.register(Category)
-class CategoryAdmin(admin.ModelAdmin):
+class ElectricalStoreAdminSite(AdminSite):
+    site_header = "Electrical Store Administration"
+    site_title = "Electrical Store Admin"
+    index_title = "Store Dashboard"
+    index_template = "admin/custom_index.html"
 
+    def index(self, request, extra_context=None):
+        if extra_context is None:
+            extra_context = {}
+
+        extra_context["pending_orders_count"] = Order.objects.filter(
+            status="pending"
+        ).count()
+
+        return super().index(
+            request,
+            extra_context=extra_context
+        )
+
+
+electrical_store_admin_site = ElectricalStoreAdminSite(
+    name="electrical_store_admin"
+)
+
+
+class CategoryAdmin(admin.ModelAdmin):
     list_display = (
         "name",
         "slug",
@@ -32,9 +56,7 @@ class CategoryAdmin(admin.ModelAdmin):
     }
 
 
-@admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-
     list_display = (
         "name",
         "category",
@@ -62,9 +84,7 @@ class ProductAdmin(admin.ModelAdmin):
     }
 
 
-@admin.register(CustomerProfile)
 class CustomerProfileAdmin(admin.ModelAdmin):
-
     list_display = (
         "user",
         "phone",
@@ -78,9 +98,7 @@ class CustomerProfileAdmin(admin.ModelAdmin):
     )
 
 
-@admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-
     list_display = (
         "order_number",
         "customer",
@@ -105,10 +123,12 @@ class OrderAdmin(admin.ModelAdmin):
         "created_at",
     )
 
+    ordering = (
+        "-created_at",
+    )
 
-@admin.register(OrderItem)
+
 class OrderItemAdmin(admin.ModelAdmin):
-
     list_display = (
         "order",
         "product_name",
@@ -121,3 +141,29 @@ class OrderItemAdmin(admin.ModelAdmin):
         "product_name",
         "order__order_number",
     )
+
+
+electrical_store_admin_site.register(
+    Category,
+    CategoryAdmin
+)
+
+electrical_store_admin_site.register(
+    Product,
+    ProductAdmin
+)
+
+electrical_store_admin_site.register(
+    CustomerProfile,
+    CustomerProfileAdmin
+)
+
+electrical_store_admin_site.register(
+    Order,
+    OrderAdmin
+)
+
+electrical_store_admin_site.register(
+    OrderItem,
+    OrderItemAdmin
+)

@@ -1,0 +1,27 @@
+{% extends "admin/index.html" %}
+
+{% block content %}
+
+<div class="module">
+    <h2>Order Alerts</h2>
+
+    <table>
+        <tbody>
+            <tr>
+                <th scope="row">
+                    <a href="{% url 'electrical_store_admin:store_order_changelist' %}?status__exact=pending">
+                        Pending Orders
+                    </a>
+                </th>
+
+                <td>
+                    <strong>{{ pending_orders_count }}</strong>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+{{ block.super }}
+
+{% endblock %}

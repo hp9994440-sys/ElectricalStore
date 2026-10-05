@@ -110,10 +110,13 @@ class Order(models.Model):
     ]
 
     customer = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name="orders"
-    )
+    User,
+    on_delete=models.SET_NULL,
+    related_name="orders",
+    null=True,
+    blank=True
+)
+    
 
     order_number = models.CharField(
         max_length=30,

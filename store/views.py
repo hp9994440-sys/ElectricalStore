@@ -232,7 +232,7 @@ def update_cart(request, product_id):
         {}
     )
 
-    product_key = str(product.id)
+    product_key = str(product_id)
 
     try:
         quantity = int(
@@ -277,7 +277,6 @@ def remove_from_cart(request, product_id):
     return redirect("cart")
 
 
-@login_required
 def checkout(request):
     cart = request.session.get(
         "cart",
@@ -325,10 +324,6 @@ def checkout(request):
     if not cart_items:
         return redirect("cart")
 
-    profile, created = CustomerProfile.objects.get_or_create(
-        user=request.user
-    )
-
     if request.method == "POST":
         form = CheckoutForm(request.POST)
 
@@ -349,8 +344,14 @@ def checkout(request):
                     + uuid.uuid4().hex[:10].upper()
                 )
 
+                customer = (
+                    request.user
+                    if request.user.is_authenticated
+                    else None
+                )
+
                 order = Order.objects.create(
-                    customer=request.user,
+                    customer=customer,
                     order_number=order_number,
                     full_name=form.cleaned_data["full_name"],
                     phone=form.cleaned_data["phone"],
@@ -387,13 +388,10 @@ def checkout(request):
                         update_fields=["stock"]
                     )
 
-                profile.phone = form.cleaned_data["phone"]
-                profile.address = form.cleaned_data["address"]
-                profile.city = form.cleaned_data["city"]
-                profile.save()
-
                 request.session["cart"] = {}
                 request.session.modified = True
+
+            request.session["last_order_number"] = order.order_number
 
             return redirect(
                 "order_success",
@@ -401,17 +399,7 @@ def checkout(request):
             )
 
     else:
-        form = CheckoutForm(
-            initial={
-                "full_name": (
-                    request.user.get_full_name()
-                    or request.user.username
-                ),
-                "phone": profile.phone,
-                "address": profile.address,
-                "city": profile.city,
-            }
-        )
+        form = CheckoutForm()
 
     return render(
         request,
@@ -424,13 +412,16 @@ def checkout(request):
     )
 
 
-@login_required
 def order_success(request, order_number):
+    if request.session.get("last_order_number") != order_number:
+        return redirect("home")
+
     order = get_object_or_404(
         Order,
         order_number=order_number,
-        customer=request.user,
     )
+
+    request.session.pop("last_order_number", None)
 
     return render(
         request,
@@ -452,7 +443,7 @@ def my_orders(request):
         "store/orders.html",
         {
             "orders": orders
-        }
+        },
     )
 
 
@@ -469,5 +460,5 @@ def order_detail(request, order_number):
         "store/order_detail.html",
         {
             "order": order
-        }
+        },
     )
