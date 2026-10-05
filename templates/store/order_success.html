@@ -1,0 +1,77 @@
+{% extends "store/base.html" %}
+
+{% block title %}Order Confirmed - Electrical Store{% endblock %}
+
+{% block content %}
+
+<section class="section">
+
+    <div class="container">
+
+        <div class="success-card">
+
+            <div class="success-icon">
+                ✓
+            </div>
+
+            <h1>
+                Order Confirmed!
+            </h1>
+
+            <p>
+                Thank you for your order.
+            </p>
+
+            <p>
+                Your order number is:
+            </p>
+
+            <strong class="order-number">
+                {{ order.order_number }}
+            </strong>
+
+
+            <div class="success-details">
+
+                <p>
+                    Total:
+                    <strong>
+                        Rs. {{ order.total_amount }}
+                    </strong>
+                </p>
+
+                <p>
+                    Payment:
+                    {{ order.get_payment_method_display }}
+                </p>
+
+                <p>
+                    Status:
+                    {{ order.get_status_display }}
+                </p>
+
+            </div>
+
+
+            <a
+                href="{% url 'orders' %}"
+                class="primary-btn"
+            >
+                View My Orders
+            </a>
+
+
+            <a
+                href="{% url 'home' %}"
+                class="outline-btn"
+            >
+                Continue Shopping
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

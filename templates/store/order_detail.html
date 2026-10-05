@@ -1,0 +1,127 @@
+{% extends "store/base.html" %}
+
+{% block title %}Order {{ order.order_number }} - Electrical Store{% endblock %}
+
+{% block content %}
+
+<section class="section">
+
+    <div class="container">
+
+        <a
+            href="{% url 'orders' %}"
+            class="back-link"
+        >
+            ← Back to Orders
+        </a>
+
+
+        <div class="order-detail-card">
+
+            <div class="order-detail-header">
+
+                <div>
+
+                    <span>
+                        ORDER NUMBER
+                    </span>
+
+                    <h1>
+                        {{ order.order_number }}
+                    </h1>
+
+                </div>
+
+                <div class="order-status">
+                    {{ order.get_status_display }}
+                </div>
+
+            </div>
+
+
+            <div class="order-items">
+
+                <h2>
+                    Products
+                </h2>
+
+                {% for item in order.items.all %}
+
+                    <div class="order-item">
+
+                        <div>
+
+                            <h3>
+                                {{ item.product_name }}
+                            </h3>
+
+                            <p>
+                                Qty: {{ item.quantity }}
+                            </p>
+
+                        </div>
+
+                        <strong>
+                            Rs. {{ item.subtotal }}
+                        </strong>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+
+            <div class="order-information">
+
+                <h2>
+                    Delivery Information
+                </h2>
+
+                <p>
+                    <strong>Name:</strong>
+                    {{ order.full_name }}
+                </p>
+
+                <p>
+                    <strong>Phone:</strong>
+                    {{ order.phone }}
+                </p>
+
+                <p>
+                    <strong>Address:</strong>
+                    {{ order.address }}
+                </p>
+
+                <p>
+                    <strong>City:</strong>
+                    {{ order.city }}
+                </p>
+
+                <p>
+                    <strong>Payment:</strong>
+                    {{ order.get_payment_method_display }}
+                </p>
+
+            </div>
+
+
+            <div class="summary-total">
+
+                <span>
+                    Total
+                </span>
+
+                <strong>
+                    Rs. {{ order.total_amount }}
+                </strong>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

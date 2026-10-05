@@ -1,0 +1,206 @@
+{% extends "store/base.html" %}
+
+{% block title %}Shopping Cart - Electrical Store{% endblock %}
+
+{% block content %}
+
+<section class="section">
+
+    <div class="container">
+
+        <div class="section-heading">
+
+            <div>
+
+                <div class="section-label">
+                    YOUR SHOPPING CART
+                </div>
+
+                <h1>
+                    Shopping Cart
+                </h1>
+
+            </div>
+
+        </div>
+
+
+        {% if cart_items %}
+
+            <div class="cart-layout">
+
+                <div class="cart-items">
+
+                    {% for item in cart_items %}
+
+                        <div class="cart-item">
+
+                            <div class="cart-item-image">
+
+                                {% if item.product.image %}
+
+                                    <img
+                                        src="{{ item.product.image.url }}"
+                                        alt="{{ item.product.name }}"
+                                    >
+
+                                {% else %}
+
+                                    ⚡
+
+                                {% endif %}
+
+                            </div>
+
+
+                            <div class="cart-item-info">
+
+                                <h3>
+                                    {{ item.product.name }}
+                                </h3>
+
+                                <p>
+                                    Rs. {{ item.product.price }}
+                                </p>
+
+                            </div>
+
+
+                            <form
+                                method="post"
+                                action="{% url 'update_cart' item.product.id %}"
+                                class="quantity-form"
+                            >
+
+                                {% csrf_token %}
+
+                                <input
+                                    type="number"
+                                    name="quantity"
+                                    value="{{ item.quantity }}"
+                                    min="1"
+                                    max="{{ item.product.stock }}"
+                                >
+
+                                <button type="submit">
+                                    Update
+                                </button>
+
+                            </form>
+
+
+                            <strong class="cart-subtotal">
+                                Rs. {{ item.subtotal }}
+                            </strong>
+
+
+                            <a
+                                href="{% url 'remove_from_cart' item.product.id %}"
+                                class="remove-link"
+                            >
+                                Remove
+                            </a>
+
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+
+                <div class="cart-summary">
+
+                    <h2>
+                        Order Summary
+                    </h2>
+
+                    <div class="summary-row">
+
+                        <span>
+                            Subtotal
+                        </span>
+
+                        <strong>
+                            Rs. {{ total }}
+                        </strong>
+
+                    </div>
+
+                    <div class="summary-row">
+
+                        <span>
+                            Delivery
+                        </span>
+
+                        <strong>
+                            Calculated at checkout
+                        </strong>
+
+                    </div>
+
+                    <hr>
+
+                    <div class="summary-total">
+
+                        <span>
+                            Total
+                        </span>
+
+                        <strong>
+                            Rs. {{ total }}
+                        </strong>
+
+                    </div>
+
+
+                    <a
+                        href="{% url 'checkout' %}"
+                        class="primary-btn full-btn"
+                    >
+                        Proceed to Checkout
+                    </a>
+
+
+                    <a
+                        href="{% url 'home' %}"
+                        class="outline-btn full-btn"
+                    >
+                        Continue Shopping
+                    </a>
+
+                </div>
+
+            </div>
+
+        {% else %}
+
+            <div class="empty-cart">
+
+                <div>
+                    🛒
+                </div>
+
+                <h2>
+                    Your cart is empty
+                </h2>
+
+                <p>
+                    Add some electrical products to your cart.
+                </p>
+
+                <a
+                    href="{% url 'home' %}"
+                    class="primary-btn"
+                >
+                    Start Shopping
+                </a>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</section>
+
+{% endblock %}

@@ -1,0 +1,427 @@
+{% extends "store/base.html" %}
+
+{% block title %}
+Electrical Store - Quality Electrical Supplies
+{% endblock %}
+
+{% block content %}
+
+<section class="hero-section">
+
+    <div class="container hero-content">
+
+        <div class="hero-text">
+
+            <div class="hero-badge">
+                ⚡ PROFESSIONAL ELECTRICAL SUPPLIES
+            </div>
+
+            <h1>
+                Power Your
+                <span>Business Better.</span>
+            </h1>
+
+            <p>
+                Quality electrical products for wholesalers,
+                contractors, businesses and professional electricians.
+            </p>
+
+            <div class="hero-buttons">
+
+                <a
+                    href="#products"
+                    class="primary-btn"
+                >
+                    Shop Products
+                </a>
+
+                <a
+                    href="#categories"
+                    class="outline-btn"
+                >
+                    View Categories
+                </a>
+
+            </div>
+
+
+            <div class="hero-stats">
+
+                <div>
+                    <strong>Quality</strong>
+                    <span>Reliable Products</span>
+                </div>
+
+                <div>
+                    <strong>Wholesale</strong>
+                    <span>Business Pricing</span>
+                </div>
+
+                <div>
+                    <strong>Trusted</strong>
+                    <span>Professional Service</span>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="hero-visual">
+
+            <div class="electric-card">
+
+                <div class="electric-icon">
+                    ⚡
+                </div>
+
+                <span>
+                    ELECTRICAL STORE
+                </span>
+
+                <strong>
+                    POWER<br>
+                    YOUR<br>
+                    BUSINESS
+                </strong>
+
+                <div class="electric-line"></div>
+
+                <small>
+                    Quality electrical supplies
+                </small>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<section
+    class="section featured-section"
+    id="categories"
+>
+
+    <div class="container">
+
+        <div class="section-heading">
+
+            <div>
+
+                <div class="section-label">
+                    SHOP BY CATEGORY
+                </div>
+
+                <h2>
+                    Electrical Categories
+                </h2>
+
+            </div>
+
+            <p class="section-description">
+                Find the products you need quickly.
+            </p>
+
+        </div>
+
+
+        <div class="category-grid">
+
+            {% for category in categories %}
+
+                <a
+                    href="#products"
+                    class="category-card"
+                >
+
+                    <div class="category-icon">
+                        ⚡
+                    </div>
+
+                    <h3>
+                        {{ category.name }}
+                    </h3>
+
+                    {% if category.description %}
+
+                        <p>
+                            {{ category.description }}
+                        </p>
+
+                    {% endif %}
+
+                    <span>
+                        View Products →
+                    </span>
+
+                </a>
+
+            {% empty %}
+
+                <div class="empty-state">
+                    No categories available yet.
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<section
+    class="section"
+    id="products"
+>
+
+    <div class="container">
+
+        <div class="section-heading">
+
+            <div>
+
+                <div class="section-label">
+                    OUR PRODUCTS
+                </div>
+
+                <h2>
+                    Electrical Products
+                </h2>
+
+            </div>
+
+            <p class="section-description">
+                Quality products for every electrical need.
+            </p>
+
+        </div>
+
+
+        <form
+            method="get"
+            class="search-box"
+        >
+
+            <input
+                type="search"
+                name="q"
+                value="{{ search_query }}"
+                placeholder="Search electrical products..."
+            >
+
+            <button type="submit">
+                Search
+            </button>
+
+        </form>
+
+
+        <div class="product-grid">
+
+            {% for product in products %}
+
+                <div class="product-card">
+
+                    <a
+                        href="{% url 'product_detail' product.slug %}"
+                    >
+
+                        <div class="product-image">
+
+                            {% if product.image %}
+
+                                <img
+                                    src="{{ product.image.url }}"
+                                    alt="{{ product.name }}"
+                                >
+
+                            {% else %}
+
+                                <div class="image-placeholder">
+                                    ⚡
+                                </div>
+
+                            {% endif %}
+
+
+                            {% if product.stock > 0 %}
+
+                                <span class="stock-badge">
+                                    IN STOCK
+                                </span>
+
+                            {% else %}
+
+                                <span class="stock-badge out">
+                                    OUT OF STOCK
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+                    </a>
+
+
+                    <div class="product-info">
+
+                        <div class="product-category">
+                            {{ product.category.name }}
+                        </div>
+
+                        <h3>
+                            {{ product.name }}
+                        </h3>
+
+                        {% if product.description %}
+
+                            <p class="product-description">
+                                {{ product.description|truncatewords:15 }}
+                            </p>
+
+                        {% endif %}
+
+                        <p class="product-sku">
+                            SKU: {{ product.sku }}
+                        </p>
+
+
+                        <div class="price-row">
+
+                            <div>
+
+                                <span class="price-label">
+                                    Retail Price
+                                </span>
+
+                                <strong>
+                                    Rs. {{ product.price }}
+                                </strong>
+
+                            </div>
+
+
+                            {% if product.wholesale_price %}
+
+                                <div class="wholesale-price">
+
+                                    <span class="price-label">
+                                        Wholesale
+                                    </span>
+
+                                    <strong>
+                                        Rs. {{ product.wholesale_price }}
+                                    </strong>
+
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        {% if product.stock > 0 %}
+
+                            <a
+                                href="{% url 'add_to_cart' product.id %}"
+                                class="product-btn"
+                            >
+                                🛒 Add to Cart
+                            </a>
+
+                        {% else %}
+
+                            <button
+                                class="product-btn"
+                                type="button"
+                                disabled
+                            >
+                                Out of Stock
+                            </button>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            {% empty %}
+
+                <div class="empty-products">
+
+                    <div>
+                        ⚡
+                    </div>
+
+                    <h3>
+                        No Products Yet
+                    </h3>
+
+                    <p>
+                        Add products from the Django admin panel.
+                    </p>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<section class="trust-section">
+
+    <div class="container">
+
+        <div class="trust-grid">
+
+            <div class="trust-item">
+
+                <span>✓</span>
+
+                <div>
+                    <strong>Quality Products</strong>
+                    <small>Reliable electrical supplies</small>
+                </div>
+
+            </div>
+
+
+            <div class="trust-item">
+
+                <span>₨</span>
+
+                <div>
+                    <strong>Wholesale Pricing</strong>
+                    <small>Competitive business prices</small>
+                </div>
+
+            </div>
+
+
+            <div class="trust-item">
+
+                <span>⚡</span>
+
+                <div>
+                    <strong>Trusted Service</strong>
+                    <small>Professional support</small>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

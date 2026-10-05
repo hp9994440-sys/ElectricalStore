@@ -1,0 +1,118 @@
+{% extends "store/base.html" %}
+
+{% block title %}
+{{ product.name }} - Electrical Store
+{% endblock %}
+
+{% block content %}
+
+<section class="section">
+
+    <div class="container">
+
+        <a
+            href="{% url 'home' %}"
+            class="back-link"
+        >
+            ← Back to Products
+        </a>
+
+
+        <div class="product-detail">
+
+            <div class="product-detail-image">
+
+                {% if product.image %}
+
+                    <img
+                        src="{{ product.image.url }}"
+                        alt="{{ product.name }}"
+                    >
+
+                {% else %}
+
+                    <div class="image-placeholder large">
+                        ⚡
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+
+            <div class="product-detail-info">
+
+                <span class="product-category">
+                    {{ product.category.name }}
+                </span>
+
+                <h1>
+                    {{ product.name }}
+                </h1>
+
+                <p class="product-sku">
+                    SKU: {{ product.sku }}
+                </p>
+
+
+                <div class="detail-price">
+
+                    <strong>
+                        Rs. {{ product.price }}
+                    </strong>
+
+                    {% if product.wholesale_price %}
+
+                        <span>
+                            Wholesale:
+                            Rs. {{ product.wholesale_price }}
+                        </span>
+
+                    {% endif %}
+
+                </div>
+
+
+                <div class="product-description">
+
+                    <h3>
+                        Description
+                    </h3>
+
+                    <p>
+                        {{ product.description }}
+                    </p>
+
+                </div>
+
+
+                {% if product.stock > 0 %}
+
+                    <div class="detail-stock">
+                        ✓ {{ product.stock }} available
+                    </div>
+
+                    <a
+                        href="{% url 'add_to_cart' product.id %}"
+                        class="primary-btn"
+                    >
+                        🛒 Add to Cart
+                    </a>
+
+                {% else %}
+
+                    <div class="detail-stock out">
+                        Out of Stock
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

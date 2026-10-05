@@ -1,0 +1,132 @@
+{% extends "store/base.html" %}
+
+{% block title %}My Orders - Electrical Store{% endblock %}
+
+{% block content %}
+
+<section class="section">
+
+    <div class="container">
+
+        <div class="section-heading">
+
+            <div>
+
+                <div class="section-label">
+                    ACCOUNT
+                </div>
+
+                <h1>
+                    My Orders
+                </h1>
+
+            </div>
+
+        </div>
+
+
+        {% if orders %}
+
+            <div class="orders-list">
+
+                {% for order in orders %}
+
+                    <div class="order-card">
+
+                        <div>
+
+                            <span>
+                                Order
+                            </span>
+
+                            <h3>
+                                {{ order.order_number }}
+                            </h3>
+
+                        </div>
+
+
+                        <div>
+
+                            <span>
+                                Date
+                            </span>
+
+                            <p>
+                                {{ order.created_at|date:"d M Y" }}
+                            </p>
+
+                        </div>
+
+
+                        <div>
+
+                            <span>
+                                Status
+                            </span>
+
+                            <p class="order-status">
+                                {{ order.get_status_display }}
+                            </p>
+
+                        </div>
+
+
+                        <div>
+
+                            <span>
+                                Total
+                            </span>
+
+                            <strong>
+                                Rs. {{ order.total_amount }}
+                            </strong>
+
+                        </div>
+
+
+                        <a
+                            href="{% url 'order_detail' order.order_number %}"
+                            class="product-btn"
+                        >
+                            View Order
+                        </a>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <div class="empty-cart">
+
+                <div>
+                    📦
+                </div>
+
+                <h2>
+                    No Orders Yet
+                </h2>
+
+                <p>
+                    Your orders will appear here.
+                </p>
+
+                <a
+                    href="{% url 'home' %}"
+                    class="primary-btn"
+                >
+                    Start Shopping
+                </a>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</section>
+
+{% endblock %}

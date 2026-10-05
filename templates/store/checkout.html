@@ -1,0 +1,184 @@
+{% extends "store/base.html" %}
+
+{% block title %}Checkout - Electrical Store{% endblock %}
+
+{% block content %}
+
+<section class="section">
+
+    <div class="container">
+
+        <div class="section-heading">
+
+            <div>
+
+                <div class="section-label">
+                    CHECKOUT
+                </div>
+
+                <h1>
+                    Delivery & Payment
+                </h1>
+
+            </div>
+
+        </div>
+
+
+        <div class="checkout-layout">
+
+            <div class="checkout-form-card">
+
+                <form method="post">
+
+                    {% csrf_token %}
+
+
+                    {% if form.non_field_errors %}
+
+                        <div class="form-error-box">
+
+                            {% for error in form.non_field_errors %}
+                                {{ error }}
+                            {% endfor %}
+
+                        </div>
+
+                    {% endif %}
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Full Name
+                        </label>
+
+                        {{ form.full_name }}
+
+                        {% for error in form.full_name.errors %}
+                            <div class="field-error">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Phone Number
+                        </label>
+
+                        {{ form.phone }}
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Delivery Address
+                        </label>
+
+                        {{ form.address }}
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            City
+                        </label>
+
+                        {{ form.city }}
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Payment Method
+                        </label>
+
+                        <div class="payment-options">
+                            {{ form.payment_method }}
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Order Notes
+                        </label>
+
+                        {{ form.notes }}
+
+                    </div>
+
+
+                    <button
+                        type="submit"
+                        class="auth-btn"
+                    >
+                        Place Order
+                    </button>
+
+                </form>
+
+            </div>
+
+
+            <div class="cart-summary">
+
+                <h2>
+                    Your Order
+                </h2>
+
+
+                {% for item in cart_items %}
+
+                    <div class="summary-product">
+
+                        <span>
+                            {{ item.product.name }}
+                            × {{ item.quantity }}
+                        </span>
+
+                        <strong>
+                            Rs. {{ item.subtotal }}
+                        </strong>
+
+                    </div>
+
+                {% endfor %}
+
+
+                <hr>
+
+
+                <div class="summary-total">
+
+                    <span>
+                        Total
+                    </span>
+
+                    <strong>
+                        Rs. {{ total }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}
